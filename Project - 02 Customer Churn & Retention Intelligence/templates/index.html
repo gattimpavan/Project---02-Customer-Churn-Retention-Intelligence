@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project - 02: Customer Churn & Retention Intelligence | Netflix AI Platform</title>
+  <meta name="description" content="AI-driven subscriber behavioral pattern identification, at-risk customer segmentation, root cause diagnostics, and personalized retention optimization for Netflix.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Plotly.js -->
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+<body>
+
+  <!-- Sticky Executive Navbar -->
+  <header class="navbar" id="top-navbar">
+    <div class="brand-group">
+      <div class="brand-badge">NETFLIX AI</div>
+      <div>
+        <h1 class="brand-title">Project - 02: Customer Churn & Retention Intelligence</h1>
+        <div class="brand-subtitle">Autonomous Behavioral Telemetry & Prescriptive Retention Platform</div>
+      </div>
+    </div>
+    
+    <div class="header-status">
+      <div class="status-pill">
+        <span class="status-dot"></span>
+        <span><b>Ensemble Model:</b> ROC-AUC 0.956</span>
+      </div>
+      <div class="status-pill">
+        <span><b>Audited Cohort:</b> 10,000 Subscribers</span>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <a href="#simulator-section" class="btn btn-secondary" id="btn-nav-simulator">
+        ⚡ What-If Simulator
+      </a>
+      <a href="#lookup-section" class="btn btn-secondary" id="btn-nav-lookup">
+        🔍 Subscriber Lookup
+      </a>
+      <a href="/api/download-pdf" target="_blank" class="btn btn-primary" id="btn-download-pdf">
+        📄 Download Executive PDF Report
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-container">
+
+    <!-- Problem Statement Hero Banner -->
+    <section class="problem-banner" id="problem-banner-section">
+      <div class="problem-banner-title">ENTERPRISE PROBLEM STATEMENT</div>
+      <p class="problem-banner-text">
+        "Netflix subscription business is experiencing increasing customer churn despite continued marketing expenditure. 
+        Develop an AI system that identifies behavioral patterns associated with churn, segments at-risk customers, 
+        determines potential causes, and generates personalized retention strategies."
+      </p>
+      <div class="problem-banner-tag">
+        <span class="tag-pill">🏢 Client: Netflix Inc.</span>
+        <span class="tag-pill">📉 Leaky Bucket Prevention</span>
+        <span class="tag-pill">🤖 Gradient Boosting + XAI</span>
+        <span class="tag-pill">🎯 Prescriptive Unit Economics</span>
+        <span class="tag-pill">📊 Publication-Grade PDF</span>
+      </div>
+    </section>
+
+    <!-- Section 1: Executive KPI Scorecard -->
+    <section id="kpi-section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Executive Portfolio Scorecard</h2>
+          <div class="section-desc">Key performance telemetry across 10,000 active & at-risk Netflix subscriber accounts</div>
+        </div>
+      </div>
+      
+      <div class="kpi-grid">
+        <div class="kpi-card" id="card-kpi-subscribers">
+          <div class="kpi-label">Audited Cohort</div>
+          <div class="kpi-value" id="kpi-cohort-size">10,000 Users</div>
+          <div class="kpi-subtext">Active & churning accounts</div>
+        </div>
+        
+        <div class="kpi-card" id="card-kpi-churn">
+          <div class="kpi-label">Observed Cohort Churn</div>
+          <div class="kpi-value danger" id="kpi-churn-rate">--%</div>
+          <div class="kpi-subtext">Annualized cohort attrition rate</div>
+        </div>
+
+        <div class="kpi-card" id="card-kpi-mrr">
+          <div class="kpi-label">Monthly MRR at Risk</div>
+          <div class="kpi-value danger" id="kpi-mrr-risk">$--</div>
+          <div class="kpi-subtext">Immediate recurring revenue bleed</div>
+        </div>
+
+        <div class="kpi-card" id="card-kpi-auc">
+          <div class="kpi-label">AI Model Accuracy</div>
+          <div class="kpi-value success" id="kpi-model-auc">0.956</div>
+          <div class="kpi-subtext">ROC-AUC Discriminative Power</div>
+        </div>
+
+        <div class="kpi-card" id="card-kpi-savings">
+          <div class="kpi-label">Projected ARR Preserved</div>
+          <div class="kpi-value success" id="kpi-retained-revenue">$-- / yr</div>
+          <div class="kpi-subtext">Via targeted retention playbooks</div>
+        </div>
+
+        <div class="kpi-card" id="card-kpi-roi">
+          <div class="kpi-label">Retention Campaign ROI</div>
+          <div class="kpi-value success" id="kpi-campaign-roi">+--%</div>
+          <div class="kpi-subtext">Net savings / intervention budget</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Behavioral Risk Signals & Feature Importance -->
+    <section id="behavioral-signals-section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Behavioral Pattern Recognition & Predictive Telemetry</h2>
+          <div class="section-desc">Ensemble feature importance and calibrated churn probability distribution</div>
+        </div>
+      </div>
+
+      <div class="grid-2col">
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <h3 class="chart-card-title">Risk Probability Distribution (10,000 Subscribers)</h3>
+            <span class="chart-card-badge">Decision Boundary: 0.50</span>
+          </div>
+          <div id="chart-churn-dist" class="chart-wrapper"></div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <h3 class="chart-card-title">Top 10 Behavioral Telemetry Features Driving Churn</h3>
+            <span class="chart-card-badge">Gradient Boosting MDI</span>
+          </div>
+          <div id="chart-feature-imp" class="chart-wrapper"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Customer Segmentation & At-Risk Clusters -->
+    <section id="segmentation-section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Customer Segmentation: 5 Strategic At-Risk Archetypes</h2>
+          <div class="section-desc">Multi-dimensional behavioral clustering mapping usage velocity, friction, and price sensitivity</div>
+        </div>
+      </div>
+
+      <div class="segments-grid" id="segments-container">
+        <!-- Rendered dynamically by dashboard.js -->
+      </div>
+
+      <div style="margin-top: 20px;">
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <h3 class="chart-card-title">Segment Exposure: Cohort Volume vs Monthly Recurring Revenue (MRR) at Risk</h3>
+            <span class="chart-card-badge">Strategic Priority Matrix</span>
+          </div>
+          <div id="chart-segment-mrr" class="chart-wrapper" style="min-height: 290px;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: Root Cause Diagnostics & Retention Survival Analysis -->
+    <section id="root-causes-section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Root Cause Decomposition & Retention Survival Hazard Curves</h2>
+          <div class="section-desc">Quantifying operational catalysts and longitudinal retention across subscription tiers</div>
+        </div>
+      </div>
+
+      <div class="root-cause-grid" id="root-causes-container">
+        <!-- Rendered dynamically by dashboard.js -->
+      </div>
+
+      <div style="margin-top: 20px;">
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <h3 class="chart-card-title">Kaplan-Meier Style Subscriber Retention Survival Curves S(t) Across Tiers</h3>
+            <span class="chart-card-badge">Tenure 1 - 48 Months</span>
+          </div>
+          <div id="chart-survival-curve" class="chart-wrapper" style="min-height: 310px;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Prescriptive AI Retention Playbooks -->
+    <section id="playbooks-section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Prescriptive AI Retention Playbooks & Action Plans</h2>
+          <div class="section-desc">Tailored intervention offers, messaging copy, delivery channels, and unit economics</div>
+        </div>
+      </div>
+
+      <div class="playbooks-grid" id="playbooks-container">
+        <!-- Rendered dynamically by dashboard.js -->
+      </div>
+    </section>
+
+    <!-- Section 6: Interactive What-If Retention Simulator -->
+    <section id="simulator-section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Interactive What-If Retention Budget & Impact Simulator</h2>
+          <div class="section-desc">Simulate deploying retention capital and quantify saved subscribers, MRR, and portfolio ROI</div>
+        </div>
+      </div>
+
+      <div class="simulator-box">
+        <div class="simulator-controls">
+          <div class="slider-container">
+            <div class="slider-header">
+              <span class="slider-label">Retention Campaign Budget:</span>
+              <span class="slider-value" id="slider-val-display">$30,000</span>
+            </div>
+            <input type="range" class="custom-range" id="budget-slider" min="5000" max="100000" step="5000" value="30000">
+            <div style="display:flex; justify-content:space-between; font-size:11px; color:#64748B;">
+              <span>$5,000 (Conservative)</span>
+              <span>$50,000</span>
+              <span>$100,000 (Aggressive)</span>
+            </div>
+            
+            <button class="btn btn-primary" id="btn-run-simulation" style="margin-top: 14px; justify-content: center;">
+              ⚡ Run Autonomous Retention Simulation
+            </button>
+          </div>
+
+          <div>
+            <div style="font-size: 13px; font-weight: 600; margin-bottom: 10px; color: var(--text-main);">
+              Active Retention Playbooks:
+            </div>
+            <div class="playbooks-checklist">
+              <label class="checkbox-label">
+                <input type="checkbox" name="sim-playbook" value="binge_bridge" checked>
+                <span>Next-Series Bridge (Binge & Burn)</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" name="sim-playbook" value="tech_concierge" checked>
+                <span>VIP QoS Concierge ($5 Credit)</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" name="sim-playbook" value="value_pause_downgrade" checked>
+                <span>Value Pause & Downgrade Offer</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" name="sim-playbook" value="zombie_wakeup" checked>
+                <span>Personalized Watchlist Re-Activation</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" name="sim-playbook" value="smart_dunning" checked>
+                <span>1-Click Apple/Google Pay Dunning</span>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" name="sim-playbook" value="power_advocacy" checked>
+                <span>Loyalty Early Screenings Club</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Simulation KPI Results -->
+        <div class="sim-results-grid">
+          <div class="sim-metric-card">
+            <div class="label">Subscribers Saved</div>
+            <div class="val green" id="sim-saved-subs">--</div>
+          </div>
+          <div class="sim-metric-card">
+            <div class="label">Cohort Churn Shift</div>
+            <div class="val" id="sim-churn-before-after">--% → --%</div>
+          </div>
+          <div class="sim-metric-card">
+            <div class="label">Monthly MRR Saved</div>
+            <div class="val green" id="sim-mrr-saved">$--</div>
+          </div>
+          <div class="sim-metric-card">
+            <div class="label">Annual ARR Preserved</div>
+            <div class="val green" id="sim-annual-saved">$--</div>
+          </div>
+          <div class="sim-metric-card">
+            <div class="label">Net Annual Profit</div>
+            <div class="val green" id="sim-net-profit">$--</div>
+          </div>
+          <div class="sim-metric-card">
+            <div class="label">Campaign ROI</div>
+            <div class="val green" id="sim-roi">+--%</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 22px;">
+          <div class="chart-card" style="background: rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.06);">
+            <div class="chart-card-header">
+              <h3 class="chart-card-title">Retention Economics Waterfall: Cost vs Saved Revenue vs Net Profit ($)</h3>
+              <span class="chart-card-badge">Portfolio Simulation Output</span>
+            </div>
+            <div id="chart-retention-waterfall" class="chart-wrapper" style="min-height: 290px;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 7: Individual Subscriber Risk & Retention Explainability -->
+    <section id="lookup-section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Individual Subscriber Intelligence & Explainable AI (XAI)</h2>
+          <div class="section-desc">Audit any individual account, inspect telemetry anomalies, and preview the tailored retention message</div>
+        </div>
+      </div>
+
+      <div class="lookup-card">
+        <div class="lookup-bar">
+          <input type="text" class="search-input" id="customer-search-input" placeholder="Enter Customer ID (e.g. NFLX-10023, NFLX-10150)...">
+          <select class="select-dropdown" id="quick-select-dropdown">
+            <option value="">-- Quick Select Sample Subscriber --</option>
+          </select>
+          <button class="btn btn-primary" id="btn-lookup-cust">
+            🔍 Analyze Account
+          </button>
+        </div>
+
+        <div class="subscriber-result-grid" id="subscriber-details-view">
+          <!-- Col 1: Telemetry Profile -->
+          <div class="sub-panel">
+            <div class="sub-panel-title">1. Subscriber Telemetry</div>
+            <div class="telemetry-row">
+              <span class="telemetry-label">Customer ID:</span>
+              <span class="telemetry-val" id="sub-id-display">NFLX-10023</span>
+            </div>
+            <div class="telemetry-row">
+              <span class="telemetry-label">Subscription Tier:</span>
+              <span class="telemetry-val" id="sub-tier-display">Premium ($22.99/mo)</span>
+            </div>
+            <div class="telemetry-row">
+              <span class="telemetry-label">Tenure:</span>
+              <span class="telemetry-val" id="sub-tenure-display">8 Months</span>
+            </div>
+            <div class="telemetry-row">
+              <span class="telemetry-label">Primary Device:</span>
+              <span class="telemetry-val" id="sub-device-display">Smart TV</span>
+            </div>
+            <div class="telemetry-row">
+              <span class="telemetry-label">Watch Hours (30d):</span>
+              <span class="telemetry-val" id="sub-watch-hours">12.5 hrs</span>
+            </div>
+            <div class="telemetry-row">
+              <span class="telemetry-label">Usage Velocity:</span>
+              <span class="telemetry-val" id="sub-velocity">0.32x</span>
+            </div>
+            <div class="telemetry-row">
+              <span class="telemetry-label">Days Inactive:</span>
+              <span class="telemetry-val" id="sub-days-inactive">16 Days</span>
+            </div>
+            <div class="telemetry-row">
+              <span class="telemetry-label">Buffering Incidents:</span>
+              <span class="telemetry-val" id="sub-buffering">8 Events</span>
+            </div>
+            <div class="telemetry-row">
+              <span class="telemetry-label">Support Tickets (60d):</span>
+              <span class="telemetry-val" id="sub-tickets">2 Tickets</span>
+            </div>
+          </div>
+
+          <!-- Col 2: AI Risk Assessment & Catalysts -->
+          <div class="sub-panel">
+            <div class="sub-panel-title">2. AI Risk Diagnosis & Explainability</div>
+            <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px;">
+              <div>
+                <span style="font-size: 11px; color: #94A3B8; text-transform: uppercase;">Predicted Churn Probability:</span>
+                <div style="font-size: 28px; font-weight: 800;" id="sub-risk-score">78.4%</div>
+              </div>
+              <div style="text-align: right;">
+                <span class="segment-badge" id="sub-risk-tier" style="background:#E5091422; color:#E50914;">Critical Risk</span>
+                <div style="font-size: 12px; color: #94A3B8; margin-top: 4px;" id="sub-segment-tag">Tech-Frustrated High-Tier</div>
+              </div>
+            </div>
+
+            <div style="font-size: 12px; font-weight: 600; color: #CBD5E1; margin-bottom: 8px;">
+              Dominant Behavioral Churn Drivers:
+            </div>
+            <div id="sub-drivers-container">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- Col 3: Prescriptive Retention Strategy -->
+          <div class="sub-panel" style="border-color: rgba(16, 185, 129, 0.3);">
+            <div class="sub-panel-title" style="color: #10B981;">3. Prescribed Retention Strategy</div>
+            <div style="margin-bottom: 10px;">
+              <div style="font-size: 11px; color: #94A3B8;">Recommended Playbook:</div>
+              <div style="font-size: 15px; font-weight: 700; color: #FFFFFF;" id="sub-rx-strategy">VIP QoS Concierge & Goodwill Credit</div>
+            </div>
+            <div class="telemetry-row">
+              <span class="telemetry-label">Delivery Channel:</span>
+              <span class="telemetry-val" id="sub-rx-channel">Proactive Email + In-App Notice</span>
+            </div>
+            <div class="telemetry-row">
+              <span class="telemetry-label">Incentive Offer:</span>
+              <span class="telemetry-val" id="sub-rx-offer">Network Fix + $5 Courtesy Discount</span>
+            </div>
+            <div class="telemetry-row">
+              <span class="telemetry-label">Intervention Cost:</span>
+              <span class="telemetry-val" id="sub-rx-cost">$5.20</span>
+            </div>
+            <div class="telemetry-row">
+              <span class="telemetry-label">Expected Annual Saved:</span>
+              <span class="telemetry-val" style="color: #10B981;" id="sub-rx-saved">$87.50 / yr</span>
+            </div>
+            <div class="telemetry-row">
+              <span class="telemetry-label">Projected Unit ROI:</span>
+              <span class="telemetry-val" style="color: #10B981;" id="sub-rx-roi">+1580%</span>
+            </div>
+
+            <div style="margin-top: 12px;">
+              <div style="font-size: 11px; color: #94A3B8; margin-bottom: 4px;">Automated Personalized Notification Copy:</div>
+              <div class="playbook-copy-box" id="sub-rx-copy">
+                "We detected minor buffering during your last stream. We have optimized your CDN delivery and credited $5.00 to your next bill."
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div>Project - 02: Customer Churn & Retention Intelligence | AI Agents & Autonomous Business Operations</div>
+    <div style="margin-top: 4px;">Confidential & Proprietary Netflix Enterprise Decision System. Publication-grade PDF available for download.</div>
+  </footer>
+
+  <!-- Dashboard Script -->
+  <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>
